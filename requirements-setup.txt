@@ -1,0 +1,15 @@
+# This packages are required before running setup (i.e. build commands require to import this packages).
+fastapi[all]
+uvicorn[standard]
+python-multipart
+httpx
+requests
+
+torch
+torchaudio
+torchvision
+huggingface
+uvicorn
+modelscope
+transformers
+sse-starlette
