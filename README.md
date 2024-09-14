@@ -12,7 +12,7 @@ pip install fastspeed
 ## Example
 - server
 ```sh
-fastspeed --model model_name_or_path
+fastspeed --model model_name_or_path  # default model_hub=modelscope
 fastspeed --model model_name_or_path --model_hub hf
 ```
 

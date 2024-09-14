@@ -23,8 +23,11 @@ def create_app(args):
         from transformers import AutoModelForCausalLM, AutoTokenizer
 
     app = FastAPI()
-    model = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype="auto").to(args.device)
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    model = AutoModelForCausalLM.from_pretrained(args.model, torch_dtype="auto", trust_remote_code=True)
+    if args.half == "half":
+        model = model.half()
+    model = model.to(args.device)
+    tokenizer = AutoTokenizer.from_pretrained(args.model, trust_remote_code=True)
 
     @app.post("/chat/completions")
     async def chat(request: ChatCompletionRequest):
@@ -44,7 +47,8 @@ def main():
     parser.add_argument("--model", type=str, required=True, help="Model id or model path.")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host of API.")
     parser.add_argument("--port", type=int, default=8000, help="Port of API.")
-    parser.add_argument("--model_hub", type=str, default="ms", choices=["hf", "huggingface", "ms", "modelscope"], help="Model hub.")
+    parser.add_argument("--model_hub", type=str, default="modelscope", choices=["hf", "huggingface", "ms", "modelscope"], help="Model hub.")
+    parser.add_argument("--half", type=str, default="half", help="huggingface half")
     parser.add_argument("--device", type=str, default="cuda", help="Device")
 
     args, unknown = parser.parse_known_args()
